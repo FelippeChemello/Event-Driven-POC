@@ -80,26 +80,15 @@ async function sleep (ms: number) {
 
     await retryConsumer.subscribe({ topic: 'files-delay-10' })
     await consumer.run({
-            eachBatch: async ({ batch }) => {
-                const { topic, messages } = batch
-                
-                console.log(`[${new Date().toLocaleString()}] Processing ${messages.length} messages from ${topic}`)
+        eachBatch: async ({ batch }) => {
+            const { topic, messages } = batch
+            
+            console.log(`[${new Date().toLocaleString()}] Processing ${messages.length} messages from ${topic}`)
 
-                await producer.send({
-                    topic: 'files',
-                    messages
-                })
-            }
-        })
-
-    do {        
-        consumer.pause([{ topic: 'files-delay-10' }])
-
-        console.log(`Waiting 10 seconds before resuming consumption of files-delay-10 topic...`)
-        await sleep(10 * 1000)
-
-        console.log(`Resuming consumption of files-delay-10 topic...`)
-        consumer.resume([{ topic: 'files-delay-10' }])
-        await sleep(1 * 1000) // Need to wait for the consumer to resume before polling again
-    } while (true);
+            await producer.send({
+                topic: 'files',
+                messages
+            })
+        }
+    })
 })()
