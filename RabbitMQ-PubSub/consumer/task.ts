@@ -23,9 +23,9 @@ const rabbitUrl = 'amqp://localhost:5672';
     })
 
 
-    await channel.assertExchange(exchange, 'fanout', { durable: true })
+    await channel.assertExchange(exchange, 'fanout', { durable: true, autoDelete: false })
     
-    await channel.assertQueue(taskQueue, { exclusive: true })
+    await channel.assertQueue(taskQueue, { autoDelete: false })
     await channel.bindQueue(taskQueue, exchange, '')
     await channel.consume(taskQueue, async (message) => {
         console.log(`[${new Date().toLocaleString()}] Task Received message`)

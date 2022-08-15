@@ -23,9 +23,9 @@ const rabbitUrl = 'amqp://localhost:5672';
     })
 
 
-    await channel.assertExchange(exchange, 'fanout', { durable: true })
+    await channel.assertExchange(exchange, 'fanout', { durable: true, autoDelete: false })
 
-    await channel.assertQueue(logQueue, { exclusive: true })
+    await channel.assertQueue(logQueue, { autoDelete: false })
     await channel.bindQueue(logQueue, exchange, '')
     await channel.consume(logQueue, async (message) => {
         console.log(`[${new Date().toLocaleString()}] Log Received message`)
